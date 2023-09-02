@@ -1,0 +1,76 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title {\textbf{\textit{Obstacle Avoidance for Ground Robot}}}
+\author{Vinit Mehta (2022111001)\\
+Abhinav Raundhal (2022101089)\\
+Yash Shinde (2022111009)\\
+Samyak Mishra (2022101121)}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Motivation}
+
+We all know robots are becoming increasingly important in our lives, doing tasks from delivering packages to exploring unknown places. But there’s a big challenge they face: how to move around without bumping into things.\\
+Our project, “Obstacle avoidance for ground robots”, is all about solving this problem. We want to make sure that robots can move around safely and efficiently. We would be using Potential Field Method to avoid obstacle, by simulating attractive forces towards the goal and repulsive forces from obstacles. This method offers a versatile way to plan paths while avoiding collisions.\\
+\\
+Here are some key reasons that drive our motivation for this project:
+\begin{itemize}
+\item \textbf{Safety enhancement:} Ensuring that robots can navigate around obstacles in real-time, without collisions, is essential to prevent accidents and damage.
+\item \textbf{Autonomous Exploration:} Autonomous obstacle avoidance is vital in enabling these robots to navigate challenging and unknown terrains effectively for crucial applications such as search and rescue, and delivering items to their desired location without damaging the item itself.
+\item \textbf{Human-Robot Collaboration:} In scenarios where robots work alongside humans, such as in warehouses or healthcare settings, the ability to navigate safely around people and obstacles is essential for seamless collaboration.
+Our goal is to make robots smarter and safer. We believe that by doing this project, we can make robots even more helpful in our lives and push the boundaries of what they can do.
+
+\end{itemize}
+
+\section{Implementation}
+The project involves the implementation of obstacle detection and avoidance using an ultrasonic sensor (HC-SR04) and a stepper motor controlled wheel system. The core of the algorithm is executed on an Arduino Nano platform. To achieve obstacle avoidance we use a method called "Potential Field Algorithm". This method makes use of the distance data obtained from the sensor to guide the robot around obstacles within a predefined matrix. The robot is tasked with starting from a designated start line and moves through the matrix while adjusting its direction based on calculations from the potential field algorithm to avoid any encountered obstacles. The objective is for the robot to reach a designated end line, at which it will detect the presence of the end line's and stop moving. This project combines sensor technology, motion control and intelligent algorithms like potential field method to create an autonomous obstacle-avoiding robot capable of navigating environments without colliding with obstacles from start line to finish line.
+
+\section{Components}
+ The following components will be required for making the robot:
+ \begin{itemize}
+ \item Chassis (ready-made) x 1
+ \item Ultrasonic Sensors x 6 
+ \item Castor wheel x 1 
+ \item Wheels x 2 
+ \item Stepper motors x 2 
+ \item Motor brackets x 2
+ \item Jumper wires 
+ \item Breadboard(small) x 2
+ \item Arduino nano x1  
+ \item Motor Driver L293D x 1 
+ \item LiPo battery x 1
+ \end{itemize}
+
+\section{Algorithm}
+To implement this project we will use the Potential Fields Method algorithm. The basic idea behind this algorithm is to represent the floor using a two dimensional grid, with fixed cells marking the start and end points. The algorithm keeps track of a square window of a certain size, in which the robot periodically takes in input from ultrasonic sensors, detecting obstacles and measuring the distances at which they are present. For each obstacle the algorithm will then incident a repulsive force on the robot, whose magnitude is inversely proportional to the distance. The algorithm also keeps track of the position of the robot; it incidents an attractive force on the robot, exerted by the source, the magnitude of which is also inversely proportional to the robot’s current distance from the source. Then the robot is made to move along the resultant force vector, by driving the motors to appropriately turn the robot and move the robot into the next cell. This is continued till the robot reaches the destination, which it may either know beforehand or may sense using some IR output at the destination.
+
+\section{Rough Timeline}
+In the weeks following the receipt of components, we plan to do the following: \\
+\begin{itemize}
+    \item \textbf{Weeks 1-2:} Testing the sensors and hardware interfacing
+    \item \textbf{Weeks 3-4:} Assembly of the robot including motors \& sensors and code for motion control
+    \item \textbf{Weeks 5-6:} Testing the robot for sensor input and motion control 
+    \item \textbf{Weeks 7-8:} Implementing the algorithm, testing the robot for each functionality
+    \item \textbf{Weeks 9-10:} Testing the robot in various scenarios
+\end{itemize}
+
+\section{Summary}
+Our project focuses on developing an advanced obstacle avoidance system for ground robots which uses ultrasonic sensors to sense the distance between our robot and obstacles, using this distance data we calculate the repulsive force that the obstacle would impart on our robot and based on the resultant force on our ground robot we determine the path towards our final destination.
+
+\end{document}
