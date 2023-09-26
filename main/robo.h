@@ -1,3 +1,5 @@
+#pragma once
+
 class Robo {
   public:
   int robo_len;

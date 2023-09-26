@@ -1,4 +1,4 @@
-#include "gyro.h"
+#include "headers.h"
 
 Gyroscope::Gyroscope(int SCL_pin, int SDA_pin int errors[6])
 {

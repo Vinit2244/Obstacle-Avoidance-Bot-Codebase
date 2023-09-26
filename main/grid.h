@@ -1,3 +1,5 @@
+#pragma once
+
 class Grid {
   public:
   int n_rows;

@@ -1,4 +1,4 @@
-#include "header.h"
+#include "headers.h"
 
 Grid::Grid(int n_rows, int n_cols, int start_x, int start_y, int end_x, int end_y)
 {
