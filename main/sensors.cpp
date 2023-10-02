@@ -1,6 +1,6 @@
 #include "headers.h"
 
-Ultrasonic::Ultrasonic(uint TRIG_PIN, uint ECHO_PIN, int ERROR) 
+Ultrasonic::Ultrasonic(uint TRIG_PIN, uint ECHO_PIN, int ERROR)
 {
   speed_of_sound = 35000; // cmps
   trig_pin = TRIG_PIN;

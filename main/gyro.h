@@ -1,5 +1,7 @@
 #pragma once
 
+#include "headers.h"
+
 class Gyroscope
 {
 private:
@@ -13,7 +15,8 @@ private:
   Adafruit_MPU6050 mpu;
 
 public:
-  Gyroscope(int SCL_pin, int SDA_pin int errors[6]);
+  Gyroscope(int SCL_pin, int SDA_pin, int errors[6]);
   void Setup();
-  void getReading(int *accelerationXYZ, int *angularVelXYZ);
-}
+  void getAngularReading(double *angularVelXYZ);
+  void getLinearReading(double *accelerationXYZ);
+};

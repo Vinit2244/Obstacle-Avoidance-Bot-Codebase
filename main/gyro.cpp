@@ -1,16 +1,16 @@
 #include "headers.h"
 
-Gyroscope::Gyroscope(int SCL_pin, int SDA_pin int errors[6])
+Gyroscope::Gyroscope(int SCL_pin, int SDA_pin, int errors[6])
 {
   SCL = SCL_pin;
   SDA = SDA_pin;
-  errors[0]= errors[0];
-  errors[1]= errors[1];
-  errors[2]= errors[2];
-  errors[3]= errors[3];
-  errors[4]= errors[4];
-  errors[5]= errors[5];
-  errors[6]= errors[6];
+  this->errors[0]= errors[0];
+  this->errors[1]= errors[1];
+  this->errors[2]= errors[2];
+  this->errors[3]= errors[3];
+  this->errors[4]= errors[4];
+  this->errors[5]= errors[5];
+  this->errors[6]= errors[6];
 }
 
 void Gyroscope::Setup()
@@ -19,14 +19,13 @@ void Gyroscope::Setup()
   Serial.println("Adafruit MPU6050 test!");
 
   // Try to initialize!
-  if (!mpu.begin()) {
+  if (!mpu.begin()) 
+  {
     Serial.println("Failed to find MPU6050 chip");
-    while (1) {
+    while (1)
       delay(10);
-    }
   }
   Serial.println("MPU6050 Found!");
-  }
 
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
   Serial.print("Accelerometer range set to: ");
@@ -41,7 +40,17 @@ void Gyroscope::Setup()
   Serial.println(mpu.getFilterBandwidth());
 }
 
-void Gyroscope::getReading(int *accelerationXYZ, int *angularVelXYZ)
+void Gyroscope::getAngularReading(double *angularVelXYZ)
+{
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+
+  angularVelXYZ[0] = g.gyro.x;
+  angularVelXYZ[1] = g.gyro.y;
+  angularVelXYZ[2] = g.gyro.z;
+}
+
+void Gyroscope::getLinearReading(double *accelerationXYZ)
 {
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
@@ -49,8 +58,4 @@ void Gyroscope::getReading(int *accelerationXYZ, int *angularVelXYZ)
   accelerationXYZ[0] = a.acceleration.x;
   accelerationXYZ[1] = a.acceleration.y;
   accelerationXYZ[2] = a.acceleration.z;
-
-  angularVelXYZ[0] = g.gyro.x;
-  angularVelXYZ[1] = g.gyro.y;
-  angularVelXYZ[2] = g.gyro.z;
 }
