@@ -9,8 +9,8 @@ public:
   int rightMotor[2]; // = {12, 13};
   int maxSpeed; // = 300;
 
-  Motors(int left1, int left2, int right1, int right2);
+  Motors();
 
-  void Setup();
+  void Setup(int left1, int left2, int right1, int right2);
   void setSpeed(int leftSpeed, int rightSpeed);
 };

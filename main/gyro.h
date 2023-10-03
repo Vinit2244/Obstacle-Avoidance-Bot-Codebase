@@ -15,8 +15,8 @@ private:
   Adafruit_MPU6050 mpu;
 
 public:
-  Gyroscope(int SCL_pin, int SDA_pin, int errors[6]);
-  void Setup();
+  Gyroscope();
+  void Setup(int SCL_pin, int SDA_pin, int errors[6]);
   void getAngularReading(double *angularVelXYZ);
   void getLinearReading(double *accelerationXYZ);
 };

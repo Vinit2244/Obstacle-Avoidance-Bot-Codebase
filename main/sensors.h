@@ -14,8 +14,7 @@ class Ultrasonic {
   int error;     // error in reading (set while calibrating) in cm
 
   // constructor
-  Ultrasonic(uint TRIG_PIN, uint ECHO_PIN, int ERROR);
-
-  void Setup();
+  Ultrasonic();
+  void Setup(uint TRIG_PIN, uint ECHO_PIN, int ERROR);
   float take_reading();
 };

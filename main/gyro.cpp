@@ -1,6 +1,10 @@
 #include "headers.h"
 
-Gyroscope::Gyroscope(int SCL_pin, int SDA_pin, int errors[6])
+Gyroscope::Gyroscope()
+{
+}
+
+void Gyroscope::Setup(int SCL_pin, int SDA_pin, int errors[6])
 {
   SCL = SCL_pin;
   SDA = SDA_pin;
@@ -11,10 +15,7 @@ Gyroscope::Gyroscope(int SCL_pin, int SDA_pin, int errors[6])
   this->errors[4]= errors[4];
   this->errors[5]= errors[5];
   this->errors[6]= errors[6];
-}
 
-void Gyroscope::Setup()
-{
   /*Taken directly from examples*/
   Serial.println("Adafruit MPU6050 test!");
 

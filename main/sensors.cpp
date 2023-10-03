@@ -1,14 +1,15 @@
 #include "headers.h"
 
-Ultrasonic::Ultrasonic(uint TRIG_PIN, uint ECHO_PIN, int ERROR)
+Ultrasonic::Ultrasonic()
 {
+}
+
+void Ultrasonic::Setup(uint TRIG_PIN, uint ECHO_PIN, int ERROR) {
   speed_of_sound = 35000; // cmps
   trig_pin = TRIG_PIN;
   echo_pin = ECHO_PIN;
   error = ERROR;
-}
-
-void Ultrasonic::Setup() {
+  
   pinMode(trig_pin, OUTPUT);
   pinMode(echo_pin, INPUT);
   distance = 0;

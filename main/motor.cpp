@@ -1,6 +1,10 @@
 #include "headers.h"
 
-Motors::Motors(int left1, int left2, int right1, int right2)
+Motors::Motors()
+{
+}
+
+void Motors::Setup(int left1, int left2, int right1, int right2)
 {
   leftMotor[0] = left1;
   leftMotor[1] = left2;
@@ -8,11 +12,8 @@ Motors::Motors(int left1, int left2, int right1, int right2)
   rightMotor[0] = right1;
   rightMotor[1] = right2;
 
-  maxSpeed = 300; // voltage dependent
-}
+  maxSpeed = 1000; // voltage dependent
 
-void Motors::Setup()
-{
   for(int i = 0; i < 2; i++)
   {
     pinMode(leftMotor[i], OUTPUT);

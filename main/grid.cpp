@@ -1,6 +1,11 @@
 #include "headers.h"
 
-Grid::Grid(int n_rows, int n_cols, int start_x, int start_y, int end_x, int end_y)
+Grid::Grid()
+{
+
+}
+
+void Grid::init(int n_rows, int n_cols, int start_x, int start_y, int end_x, int end_y)
 {
   this->n_rows = n_rows;
   this->n_cols = n_cols;

@@ -14,5 +14,6 @@ class Grid {
   int **Array;
   int **Visited;
 
-  Grid(int n_rows, int n_cols, int start_x, int start_y, int end_x, int end_y);
+  Grid();
+  void init(int n_rows, int n_cols, int start_x, int start_y, int end_x, int end_y);
 };

@@ -1,7 +1,13 @@
 #include "headers.h"
 
-Robo::Robo(int GRID_ROWS, int GRID_COLS, int GRID_SQUARE_SIDE_LEN, int START_X, int START_Y, int END_X, int END_Y, int ROBO_LEN, int ROBO_WIDTH, int TRIG1, int ECHO1, int ERROR1, int TRIG2, int ECHO2, int ERROR2, int TRIG3, int ECHO3, int ERROR3, int LEFTMOTOR1, int LEFTMOTOR2, int RIGHTMOTOR1, int RIGHTMOTOR2, int SCL, int SDA, int gyro_errors[6]) : Left(TRIG1, ECHO1, ERROR1), Forward(TRIG2, ECHO2, ERROR2), Right(TRIG3, ECHO3, ERROR3), grid(GRID_ROWS, GRID_COLS, START_X, START_Y, END_X, END_Y),
- gyro(SCL, SDA, gyro_errors), motors(LEFTMOTOR1, LEFTMOTOR2, RIGHTMOTOR1, RIGHTMOTOR2)
+Robo::Robo()
+{
+  
+}
+
+void Robo::Setup(int GRID_ROWS, int GRID_COLS, int GRID_SQUARE_SIDE_LEN, int START_X, int START_Y, int END_X, int END_Y, int ROBO_LEN, int ROBO_WIDTH, int TRIG1, int ECHO1, 
+int ERROR1, int TRIG2, int ECHO2, int ERROR2, int TRIG3, int ECHO3, int ERROR3, int LEFTMOTOR1, int LEFTMOTOR2, int RIGHTMOTOR1, int RIGHTMOTOR2,
+ int SCL, int SDA, int gyro_errors[6])
 {
   grid_rows   = GRID_ROWS;
   grid_cols   = GRID_COLS;
@@ -36,48 +42,57 @@ Robo::Robo(int GRID_ROWS, int GRID_COLS, int GRID_SQUARE_SIDE_LEN, int START_X, 
   repulsiveForceConst = 10;
   repulsiveForceConst = 20;
 
-  Left.Setup();
-  Right.Setup();
-  Forward.Setup();
-  gyro.Setup();
-  motors.Setup();
+  grid.init(GRID_ROWS, GRID_COLS, START_X, START_Y, END_X, END_Y);
+  Left.Setup(TRIG1, ECHO1, ERROR1);
+  Right.Setup(TRIG2, ECHO2, ERROR2);
+  Forward.Setup(TRIG3, ECHO3, ERROR3);
+  // gyro.Setup(SCL, SDA, gyro_errors);
+  motors.Setup(LEFTMOTOR1, LEFTMOTOR2, RIGHTMOTOR1, RIGHTMOTOR2);
 
   grid.Visited[curX][curY] = 1;
+
+  Serial.println("setup done");
 }
 
 void Robo::setObstacleCells()
 {
+  
   int LeftObstacleDist = (int)(Left.take_reading() / grid_square_side_len);
   int RightObstacleDist = (int)(Right.take_reading() / grid_square_side_len);
   int ForwardObstacleDist = (int)(Forward.take_reading() / grid_square_side_len);
+
+  Serial.println("hello1");
+  Serial.print(LeftObstacleDist);
+  Serial.print(RightObstacleDist);
+  Serial.println(ForwardObstacleDist);
+  Serial.println("hello2");
   
-  switch(curOrientation)
+  if(curOrientation == 0) // facing along +X
   {
-    case 0: // facing along +Y
-    {
-      grid.Array[curX - LeftObstacleDist][curY] = 1;
-      grid.Array[curX][curY + ForwardObstacleDist] = 1;
-      grid.Array[curX + RightObstacleDist][curY] = 1;
-    }
-    case 1: // facing along +X
-    {
-      grid.Array[curX][curY + LeftObstacleDist] = 1;
-      grid.Array[curX + ForwardObstacleDist][curY] = 1;
-      grid.Array[curX][curY - RightObstacleDist] = 1;
-    }
-    case 2: // facing along -Y
-    {
-      grid.Array[curX + LeftObstacleDist][curY] = 1;
-      grid.Array[curX][curY + ForwardObstacleDist] = 1;
-      grid.Array[curX - RightObstacleDist][curY] = 1;
-    }
-    case 3: // facing along -X
-    {
-      grid.Array[curX][curY - LeftObstacleDist] = 1;
-      grid.Array[curX - ForwardObstacleDist][curY] = 1;
-      grid.Array[curX][curY + RightObstacleDist] = 1;
-    }
+      if(0 <= curX - LeftObstacleDist < grid_rows) grid.Array[curX - LeftObstacleDist][curY] = 1;
+      if(0 <= curY + ForwardObstacleDist < grid_cols) grid.Array[curX][curY + ForwardObstacleDist] = 1;
+      if(0 <= curX + RightObstacleDist < grid_rows) grid.Array[curX + RightObstacleDist][curY] = 1;
   }
+  else if(curOrientation == 1) // facing along +X
+  {
+    if(0 <= curY + LeftObstacleDist < grid_cols) grid.Array[curX][curY + LeftObstacleDist] = 1;
+    if(0 <= curX + ForwardObstacleDist < grid_rows) grid.Array[curX + ForwardObstacleDist][curY] = 1;
+    if(0 <= curY - RightObstacleDist < grid_cols) grid.Array[curX][curY - RightObstacleDist] = 1;
+  }
+  else if(curOrientation == 2) // facing along -Y
+  {
+    if(0 <= curX + LeftObstacleDist < grid_rows) grid.Array[curX + LeftObstacleDist][curY] = 1;
+    if(0 <= curY + ForwardObstacleDist < grid_cols) grid.Array[curX][curY + ForwardObstacleDist] = 1;
+    if(0 <= curX - RightObstacleDist < grid_rows) grid.Array[curX - RightObstacleDist][curY] = 1;
+  }
+  else if(curOrientation == 3) // facing along -X
+  {
+    if(0<= curY - LeftObstacleDist < grid_cols) grid.Array[curX][curY - LeftObstacleDist] = 1;
+    if(0<= curX - ForwardObstacleDist < grid_rows) grid.Array[curX - ForwardObstacleDist][curY] = 1;
+    if(0<= curY + RightObstacleDist < grid_cols) grid.Array[curX][curY + RightObstacleDist] = 1;
+  }
+
+  Serial.println("hey");
 }
 
 pair<double, double> Robo::GetNetForce()
@@ -196,8 +211,10 @@ void Robo::Algorithm()
 {
   while(!(curX == end_x && curY == end_y))
   {
+    
     // take reading and set obstacles
     setObstacleCells();
+    Serial.println("obstacles set");
 
     pair<double, double> netF = GetNetForce();
     
