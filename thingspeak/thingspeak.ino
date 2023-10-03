@@ -15,8 +15,8 @@
 #define EchoPinRight 27
 #define TrigPinForward 32
 #define EchoPinForward 33
-#define SCL 21
-#define SDA 22
+#define SCL 22
+#define SDA 21
 
 #define speedOfSound 35000
 
