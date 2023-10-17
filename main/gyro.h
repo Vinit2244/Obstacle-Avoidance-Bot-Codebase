@@ -16,7 +16,7 @@ private:
 
 public:
   Gyroscope();
-  void Setup(int SCL_pin, int SDA_pin, int errors[6]);
+  void Setup(int SCL_pin, int SDA_pin);
   void getAngularReading(double *angularVelXYZ);
   void getLinearReading(double *accelerationXYZ);
 };

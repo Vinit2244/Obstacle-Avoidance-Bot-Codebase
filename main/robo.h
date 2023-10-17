@@ -44,7 +44,7 @@ class Robo {
 
   // constructor
   Robo();
-  void Setup(int GRID_ROWS, int GRID_COLS, int GRID_SQUARE_SIDE_LEN, int START_X, int START_Y, int END_X, int END_Y, int ROBO_LEN, int ROBO_WIDTH, int TRIG1, int ECHO1, int ERROR1, int TRIG2, int ECHO2, int ERROR2, int TRIG3, int ECHO3, int ERROR3, int LEFTMOTOR1, int LEFTMOTOR2, int RIGHTMOTOR1, int RIGHTMOTOR2, int SCL, int SDA, int gyro_errors[6]);
+  void Setup(int GRID_ROWS, int GRID_COLS, int GRID_SQUARE_SIDE_LEN, int START_X, int START_Y, int END_X, int END_Y, int ROBO_LEN, int ROBO_WIDTH, int TRIG1, int ECHO1, int ERROR1, int TRIG2, int ECHO2, int ERROR2, int TRIG3, int ECHO3, int ERROR3, int LEFTMOTOR1, int LEFTMOTOR2, int RIGHTMOTOR1, int RIGHTMOTOR2, int SCL, int SDA);
 
   void setObstacleCells();
   pair<double, double> GetNetForce();

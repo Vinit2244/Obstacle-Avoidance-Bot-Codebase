@@ -7,7 +7,7 @@ Robo::Robo()
 
 void Robo::Setup(int GRID_ROWS, int GRID_COLS, int GRID_SQUARE_SIDE_LEN, int START_X, int START_Y, int END_X, int END_Y, int ROBO_LEN, int ROBO_WIDTH, int TRIG1, int ECHO1, 
 int ERROR1, int TRIG2, int ECHO2, int ERROR2, int TRIG3, int ECHO3, int ERROR3, int LEFTMOTOR1, int LEFTMOTOR2, int RIGHTMOTOR1, int RIGHTMOTOR2,
- int SCL, int SDA, int gyro_errors[6])
+ int SCL, int SDA)
 {
   grid_rows   = GRID_ROWS;
   grid_cols   = GRID_COLS;
@@ -46,7 +46,7 @@ int ERROR1, int TRIG2, int ECHO2, int ERROR2, int TRIG3, int ECHO3, int ERROR3, 
   Left.Setup(TRIG1, ECHO1, ERROR1);
   Right.Setup(TRIG2, ECHO2, ERROR2);
   Forward.Setup(TRIG3, ECHO3, ERROR3);
-  // gyro.Setup(SCL, SDA, gyro_errors);
+  gyro.Setup(SCL, SDA);
   motors.Setup(LEFTMOTOR1, LEFTMOTOR2, RIGHTMOTOR1, RIGHTMOTOR2);
 
   grid.Visited[curX][curY] = 1;

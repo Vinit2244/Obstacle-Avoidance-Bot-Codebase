@@ -24,5 +24,3 @@
 #define _RIGHTMOTOR2 13
 #define _SCL 22
 #define _SDA 21
-
-int gyro_errors[6] = {0, 0, 0, 0, 0, 0};
