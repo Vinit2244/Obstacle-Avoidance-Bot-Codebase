@@ -18,6 +18,7 @@
 #include <WiFi.h>
 #include <ThingSpeak.h>
 #include <PubSubClient.h>
+
 // #include "esp32-hal-gpio.h"
 // #include <Adafruit_MPU6050.h>
 // #include <Adafruit_Sensor.h>
@@ -34,8 +35,11 @@ const char *MQTTUsername = "Hi81BiQeBgcQLS8LGTgRKTc";
 const char *MQTTClientID = "Hi81BiQeBgcQLS8LGTgRKTc";
 const char *MQTTPass = "QLTffZasuHLK+fZiB64op7dL";
 
-int writeChannelID = 2289111;
+int channelID = 2289111;
 const char *WriteAPIKey = "4X3O813MKA5OQ8A2";
+const char *ReadAPIKey = "W36PLEHP1C71N9BK";
+
+#define STATUSFIELD 5
 
 int port  = 1883;
 
@@ -62,6 +66,9 @@ const int rightMotor[2] = { 13, 12 };
 const int maxSpeed = 1000;
 
 float danger = 30; // cms
+
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
 
 void set_speed(int leftSpeed, int rightSpeed)
 {
@@ -137,8 +144,6 @@ void go_straight()
   }
 }
 
-WiFiClient wifiClient;
-PubSubClient mqttClient(wifiClient);
 
 void wifi_mqtt_setup()
 {
@@ -149,6 +154,8 @@ void wifi_mqtt_setup()
   }
   Serial.println("Wifi connected!");
   mqttClient.setServer(server, port);
+
+  ThingSpeak.begin(wifiClient);
 }
 
 void mqtt_loop()
@@ -167,7 +174,7 @@ void publish(float valueLeft, float valueRight, float valueForward)
   data += "field2=" + String(valueRight) + "&"; // right ultrasonic
   data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
 
-  String topicString = "channels/" + String(writeChannelID) + "/publish";
+  String topicString = "channels/" + String(channelID) + "/publish";
   Serial.println(topicString);
   mqttClient.publish(topicString.c_str(), data.c_str());
 }
@@ -187,13 +194,29 @@ void setup() {
   pinMode(center_echo, INPUT);
 
   Serial.begin(115200);
+  
 
   wifi_mqtt_setup();  
 }
 
-void loop() {
+float mqttRead()
+{
+  return ThingSpeak.readFloatField(channelID,STATUSFIELD);
+}
 
+int on_off_status = 0;
+void loop()
+{
   mqtt_loop();
+
+  while(on_off_status == 0)
+  {
+    mqtt_loop();
+    on_off_status = mqttRead();
+    stop();
+  }
+
+
   float left_distance = take_reading(left_trigger, left_echo);
   float center_distance = take_reading(center_trigger, center_echo);
   float right_distance = take_reading(right_trigger, right_echo);
@@ -207,6 +230,7 @@ void loop() {
 
   // publish to thingspeak
   publish(left_distance, right_distance, center_distance);
+  
 
   // actuation
   int l = 1;
