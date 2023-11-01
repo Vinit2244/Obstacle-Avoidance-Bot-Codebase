@@ -1,3 +1,4 @@
+#include "esp32-hal.h"
 #include "headers.h"
 
 Gyroscope::Gyroscope()
@@ -52,7 +53,7 @@ void Gyroscope::Setup(int SCL_pin, int SDA_pin)
     errors[3] += a.acceleration.x;
     errors[4] += a.acceleration.y;
     errors[5] += a.acceleration.z;
-    delay(1);
+    delayMicroseconds(100);
   }
   errors[0] /= 2000;
   errors[1] /= 2000;

@@ -131,7 +131,7 @@ void Robo::Rotate(int angleToRotate)
     return;
   double angleRotated = 0.0;
   
-  double absCurAngle = angleRotated ? angleRotated : -angleRotated;
+  double absCurAngle = 0;
   double absTotalAngle = angleToRotate ? angleToRotate : -angleToRotate;
 
   double angularVel[3];
@@ -168,9 +168,9 @@ void Robo::MoveOneCellForward()
     gyro.getLinearReading(accel);
 
     // second equation of motion : s = u * t + (1 / 2) * a * t * t
-    currentDistMoved += curVelY * 2 + 0.5 * accel[1] * 2 * 2;
+    currentDistMoved += curVelY * 0.002 + 0.5 * accel[1] * 0.002 * 0.002;
     // first equation of motion: v = u + a * t
-    curVelY = curVelY + 2 * accel[1];
+    curVelY = curVelY + 0.002 * accel[1];
   }
 
   motors.setSpeed(0, 0);
