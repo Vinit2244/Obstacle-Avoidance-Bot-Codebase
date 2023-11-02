@@ -14,45 +14,50 @@
 #define RIGHT   2
 #define LEFT    3
 
-#include <WiFi.h>
-#include <ThingSpeak.h>
-#include <PubSubClient.h>
-#include <pthread.h>
+// #include <WiFi.h>
+// #include <ThingSpeak.h>
+// #include <PubSubClient.h>
+#include "BluetoothSerial.h"
 
-#define ssid "Lorem ipsum"
-#define password "Getlostyoutrespassers"
+// #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+// #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+// #endif
 
-const char *server = "mqtt3.thingspeak.com";
-const char *MQTTUsername = "Hi81BiQeBgcQLS8LGTgRKTc";
-const char *MQTTClientID = "Hi81BiQeBgcQLS8LGTgRKTc";
-const char *MQTTPass = "QLTffZasuHLK+fZiB64op7dL";
+BluetoothSerial SerialBT;
 
-int channelID = 2289111;
-const char *WriteAPIKey = "4X3O813MKA5OQ8A2";
-const char *ReadAPIKey = "W36PLEHP1C71N9BK";
+char t;
+int BT_on_off_status = 0;
 
-float on_off_status = 0;
+// #define ssid "hello.c"
+// #define password "pwla1953"
 
-#define STATUSFIELD 5
+// const char *server = "mqtt3.thingspeak.com";
+// const char *MQTTUsername = "Hi81BiQeBgcQLS8LGTgRKTc";
+// const char *MQTTClientID = "Hi81BiQeBgcQLS8LGTgRKTc";
+// const char *MQTTPass = "QLTffZasuHLK+fZiB64op7dL";
 
-int port  = 1883;
+// int channelID = 2289111;
+// const char *WriteAPIKey = "4X3O813MKA5OQ8A2";
+
+// int port  = 1883;
 
 /* robo functions */
 void set_speed(int leftSpeed, int rightSpeed);
 float take_reading(int trig_pin, int echo_pin);
+
 void stop();
 void go_left(int turn_time);
 void go_right(int turn_time);
 void go_straight();
 
 /* IOT functions */
-void wifi_mqtt_setup();
-void mqtt_loop();
-void publish(float valueLeft, float valueRight, float valueForward);
+// void wifi_mqtt_setup();
+// void mqtt_loop();
+// void publish(float valueLeft, float valueRight, float valueForward);
 
-int status = 0;
+int status = STOP;
 
-int HIGH_T = 250; // in miliseconds
+int HIGH_T = 150; // in miliseconds
 int LOW_T = 20; // in miliseconds
 
 const int leftMotor[2] = { 4, 5 };
@@ -61,10 +66,8 @@ const int maxSpeed = 1000;
 
 float danger = 30; // cms
 
-WiFiClient wifiClient;
-PubSubClient mqttClient(wifiClient);
-
-pthread_mutex_t mutex;
+// WiFiClient wifiClient;
+// PubSubClient mqttClient(wifiClient);
 
 void set_speed(int leftSpeed, int rightSpeed)
 {
@@ -140,60 +143,40 @@ void go_straight()
   }
 }
 
+// void wifi_mqtt_setup()
+// {
+//   WiFi.begin(ssid, password);
+//   while(WiFi.status() != WL_CONNECTED){
+//     Serial.println("Connecting to wifi....");
+//     delay(1000);
+//   }
+//   Serial.println("Wifi connected!");
+//   mqttClient.setServer(server, port);
+// }
 
-void wifi_mqtt_setup()
+// void mqtt_loop()
+// {
+//   while(mqttClient.connected() == NULL){
+//     Serial.println("connecting to mqtt...");
+//     mqttClient.connect(MQTTClientID, MQTTUsername, MQTTPass);
+//     delay(1000);
+//   }
+//   mqttClient.loop();
+// }
+
+// void publish(float valueLeft, float valueRight, float valueForward)
+// {
+//   String data = "field1=" + String(valueLeft) + "&"; // left ultrasonic
+//   data += "field2=" + String(valueRight) + "&"; // right ultrasonic
+//   data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
+
+//   String topicString = "channels/" + String(channelID) + "/publish";
+//   Serial.println(topicString);
+//   mqttClient.publish(topicString.c_str(), data.c_str());
+// }
+
+void setup()
 {
-  WiFi.begin(ssid, password);
-  while(WiFi.status() != WL_CONNECTED){
-    Serial.println("Connecting to wifi....");
-    delay(1000);
-  }
-  Serial.println("Wifi connected!");
-  mqttClient.setServer(server, port);
-}
-
-void mqtt_loop()
-{
-  while(mqttClient.connected() == NULL){
-    Serial.println("connecting to mqtt...");
-    mqttClient.connect(MQTTClientID, MQTTUsername, MQTTPass);
-    delay(1000);
-  }
-  mqttClient.loop();
-}
-
-void publish(float valueLeft, float valueRight, float valueForward)
-{
-  String data = "field1=" + String(valueLeft) + "&"; // left ultrasonic
-  data += "field2=" + String(valueRight) + "&"; // right ultrasonic
-  data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
-
-  String topicString = "channels/" + String(channelID) + "/publish";
-  Serial.println(topicString);
-  mqttClient.publish(topicString.c_str(), data.c_str());
-}
-
-/* reading thread */
-
-void readStatus(void *args)
-{
-  ThingSpeak.begin(wifiClient);
-
-  while(1)
-  {
-    // Serial.print("run_t running on core ");
-    // Serial.println(xPortGetCoreID());
-    // pthread_mutex_lock(&mutex);
-    on_off_status = ThingSpeak.readFloatField(channelID,STATUSFIELD, ReadAPIKey);
-    // pthread_mutex_unlock(&mutex);
-    // Serial.println("supppppppppp");
-    delay(100);
-  }
-}
-/* reading thread */
-
-
-void setup() {
   for (int i = 0; i < 2; i++)
   {
     pinMode(leftMotor[i], OUTPUT);
@@ -208,125 +191,115 @@ void setup() {
   pinMode(center_echo, INPUT);
 
   Serial.begin(115200);
+  SerialBT.begin("ItJustWorksBot");
+  Serial.println("Bluetooth started...");
   
-  wifi_mqtt_setup();  
-  ThingSpeak.begin(wifiClient); /////////////////////////////////////// added here since we swapped thread functions
-  
-  pthread_mutex_init(&mutex, NULL);
-  // pthread_t read_t;
-  TaskHandle_t read_t;
-
-  // pthread_create(&read_t, NULL, &readStatus, NULL);
-  xTaskCreatePinnedToCore(floop, "Task1", 10000, NULL, 1, &read_t, 0);
+  // wifi_mqtt_setup();  
+  // ThingSpeak.begin(wifiClient);
 }
 
-void floop(void *args)
+void main_loop()
 {
-  while(1)
+  // mqtt_loop();
+  float left_distance = take_reading(left_trigger, left_echo);
+  float center_distance = take_reading(center_trigger, center_echo);
+  float right_distance = take_reading(right_trigger, right_echo);
+
+  Serial.print("left distance: ");
+  Serial.println(left_distance);
+  Serial.print("right distance: ");
+  Serial.println(right_distance);
+  Serial.print("center distance: ");
+  Serial.println(center_distance);
+
+  // publish to thingspeak
+  // publish(left_distance, right_distance, center_distance);
+  
+  // actuation
+  int l = 1;
+  int c = 1;
+  int r = 1;
+
+  if (left_distance < danger)
   {
-    mqtt_loop();
-    // pthread_mutex_lock(&mutex);
-    if(on_off_status == 1)
-    {  
-      // pthread_mutex_unlock(&mutex);
+    l = 0;
+  }
 
-      float left_distance = take_reading(left_trigger, left_echo);
-      float center_distance = take_reading(center_trigger, center_echo);
-      float right_distance = take_reading(right_trigger, right_echo);
+  if (center_distance < danger)
+  {
+    c = 0;
+  }
 
-      Serial.print("left distance: ");
-      Serial.println(left_distance);
-      Serial.print("right distance: ");
-      Serial.println(right_distance);
-      Serial.print("center distance: ");
-      Serial.println(center_distance);
+  if (right_distance < danger)
+  {
+    r = 0;
+  }
 
-      // publish to thingspeak
-      publish(left_distance, right_distance, center_distance);
-      
+  int result = 4 * l + 2 * c + r;
 
-      // actuation
-      int l = 1;
-      int c = 1;
-      int r = 1;
-
-      if (left_distance < danger)
-      {
-        l = 0;
-      }
-
-      if (center_distance < danger)
-      {
-        c = 0;
-      }
-
-      if (right_distance < danger)
-      {
-        r = 0;
-      }
-
-      int result = 4 * l + 2 * c + r;
-
-      if (result == 0b000)
-      {
-        stop();
-        status = STOP;
-      }
-      else if (result == 0b001)
-      {
-        go_right(HIGH_T);
-        status = RIGHT;
-      }
-      else if (result == 0b010)
-      {
-        go_straight();
-        status = FORWARD;
-      }
-      else if (result == 0b011)
-      {
-        go_right(LOW_T);
-        status = RIGHT;
-      }
-      else if (result == 0b100)
-      {
-        go_left(HIGH_T);
-        status = LEFT;
-      }
-      else if (result == 0b101)
-      {
-        // Prioritized right
-        go_right(HIGH_T);
-        status = RIGHT;
-      }
-      else if (result == 0b110)
-      {
-        go_left(LOW_T);
-        status = LEFT;
-      }
-      else if (result == 0b111)
-      {
-        go_straight();
-        status = FORWARD;
-      }
-    }
-    else
-    {
-      // pthread_mutex_unlock(&mutex);
-
-      stop();
-      status = STOP;
-    }
-    // Serial.println("pus");
+  if (result == 0b000)
+  {
+    stop();
+    status = STOP;
+  }
+  else if (result == 0b001)
+  {
+    go_right(HIGH_T);
+    status = RIGHT;
+  }
+  else if (result == 0b010)
+  {
+    go_straight();
+    status = FORWARD;
+  }
+  else if (result == 0b011)
+  {
+    go_right(LOW_T);
+    status = RIGHT;
+  }
+  else if (result == 0b100)
+  {
+    go_left(HIGH_T);
+    status = LEFT;
+  }
+  else if (result == 0b101)
+  {
+    go_right(100);
+    status = RIGHT;
+  }
+  else if (result == 0b110)
+  {
+    go_left(LOW_T);
+    status = LEFT;
+  }
+  else if (result == 0b111)
+  {
+    go_straight();
+    status = FORWARD;
   }
 }
 
 void loop()
 {
-  // Serial.print("run_t running on core ");
-  // Serial.println(xPortGetCoreID());
-  // pthread_mutex_lock(&mutex);
-  on_off_status = ThingSpeak.readFloatField(channelID,STATUSFIELD, ReadAPIKey);
-  // pthread_mutex_unlock(&mutex);
-  // Serial.println("supppppppppp");
-  delay(100);
+  if (SerialBT.available()) {
+    t = SerialBT.read();
+    Serial.println(t);
+    if (t == '1')
+    {
+      BT_on_off_status = 1;
+    }
+    else if (t == '0')
+    {
+      BT_on_off_status = 0;
+    }
+  }
+  if (BT_on_off_status == 1)
+  {
+    main_loop();
+  }
+  else
+  {
+    stop();
+    status = STOP;
+  }
 }
