@@ -7,8 +7,8 @@
 #define center_trigger              32
 #define center_echo                 33
 
-#define right_diagonal_trigger      35
-#define right_diagonal_echo         34
+#define right_diagonal_trigger      18
+#define right_diagonal_echo         19
 
 #define left_diagonal_trigger       2
 #define left_diagonal_echo          15
@@ -36,8 +36,8 @@ int BT_on_off_status = 0;
 
 #define Shinde_ssid "hello.c"
 #define Shinde_password "pwla1953"
-#define Samyak_ssid "hello.c"
-#define Samyak_password "pwla1953"
+#define Samyak_ssid "Lorem ipsum"
+#define Samyak_password "Getlostyoutrespassers"
 
 #define ssid Samyak_ssid
 #define password Samyak_password
@@ -377,7 +377,7 @@ void decide_what_to_do(int result)
 
 void main_loop()
 {
-  // mqtt_loop();
+  mqtt_loop();
   float left_distance = take_reading(left_trigger, left_echo);
   float center_distance = take_reading(center_trigger, center_echo);
   float right_distance = take_reading(right_trigger, right_echo);
@@ -434,7 +434,7 @@ void main_loop()
   decide_what_to_do(result);
 
 }
-
+int on_off_flag = 0;
 void loop()
 {
   if (SerialBT.available()) {
@@ -452,10 +452,19 @@ void loop()
   if (BT_on_off_status == 1)
   {
     main_loop();
+    on_off_flag = 0;
   }
   else
   {
     stop();
     status = STOP;
+    // float left_diagonal_distance = take_reading(left_diagonal_trigger, left_diagonal_echo);
+    // float right_diagonal_distance = take_reading(right_diagonal_trigger, right_diagonal_echo);
+    if(on_off_flag == 0)
+    {
+      publish(take_reading(left_trigger, left_echo), take_reading(right_trigger, right_echo), take_reading(center_trigger, center_echo));
+      on_off_flag = 1;
+    }
+    
   }
 }
