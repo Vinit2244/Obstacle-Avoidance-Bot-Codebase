@@ -20,9 +20,9 @@
 #define RIGHT   2
 #define LEFT    3
 
-// #include <WiFi.h>
-// #include <ThingSpeak.h>
-// #include <PubSubClient.h>
+#include <WiFi.h>
+#include <ThingSpeak.h>
+#include <PubSubClient.h>
 #include "BluetoothSerial.h"
 
 // #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
@@ -34,18 +34,24 @@ BluetoothSerial SerialBT;
 char t;
 int BT_on_off_status = 0;
 
-// #define ssid "hello.c"
-// #define password "pwla1953"
+#define Shinde_ssid "hello.c"
+#define Shinde_password "pwla1953"
+#define Samyak_ssid "hello.c"
+#define Samyak_password "pwla1953"
 
-// const char *server = "mqtt3.thingspeak.com";
-// const char *MQTTUsername = "Hi81BiQeBgcQLS8LGTgRKTc";
-// const char *MQTTClientID = "Hi81BiQeBgcQLS8LGTgRKTc";
-// const char *MQTTPass = "QLTffZasuHLK+fZiB64op7dL";
-
-// int channelID = 2289111;
-// const char *WriteAPIKey = "4X3O813MKA5OQ8A2";
-
-// int port  = 1883;
+#define ssid Samyak_ssid
+#define password Samyak_password
+#define server "mqtt3.thingspeak.com"
+#define MQTTUsername "Hi81BiQeBgcQLS8LGTgRKTc"
+#define MQTTClientID "Hi81BiQeBgcQLS8LGTgRKTc"
+#define MQTTPass "QLTffZasuHLK+fZiB64op7dL"
+#define channelID 2289111
+#define WriteAPIKey "4X3O813MKA5OQ8A2"
+#define port 1883
+#define HIGH_T 150 // in miliseconds
+#define LOW_T 20 // in miliseconds
+#define maxSpeed 1000
+#define danger 30.0 // cms
 
 /* robo functions */
 void set_speed(int leftSpeed, int rightSpeed);
@@ -57,23 +63,18 @@ void go_right(int turn_time);
 void go_straight();
 
 /* IOT functions */
-// void wifi_mqtt_setup();
-// void mqtt_loop();
-// void publish(float valueLeft, float valueRight, float valueForward);
+void wifi_mqtt_setup();
+void mqtt_loop();
+void publish(float valueLeft, float valueRight, float valueForward);
 
+
+/* gloabls */
 int status = STOP;
-
-int HIGH_T = 150; // in miliseconds
-int LOW_T = 20; // in miliseconds
-
 const int leftMotor[2] = { 4, 5 };
 const int rightMotor[2] = { 13, 12 };
-const int maxSpeed = 1000;
 
-float danger = 30; // cms
-
-// WiFiClient wifiClient;
-// PubSubClient mqttClient(wifiClient);
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
 
 void set_speed(int leftSpeed, int rightSpeed)
 {
@@ -149,37 +150,38 @@ void go_straight()
   }
 }
 
-// void wifi_mqtt_setup()
-// {
-//   WiFi.begin(ssid, password);
-//   while(WiFi.status() != WL_CONNECTED){
-//     Serial.println("Connecting to wifi....");
-//     delay(1000);
-//   }
-//   Serial.println("Wifi connected!");
-//   mqttClient.setServer(server, port);
-// }
+void wifi_mqtt_setup()
+{
+  WiFi.begin(ssid, password);
+  while(WiFi.status() != WL_CONNECTED){
+    Serial.println("Connecting to wifi....");
+    delay(1000);
+  }
+  Serial.println("Wifi connected!");
+  mqttClient.setServer(server, port);
+}
 
-// void mqtt_loop()
-// {
-//   while(mqttClient.connected() == NULL){
-//     Serial.println("connecting to mqtt...");
-//     mqttClient.connect(MQTTClientID, MQTTUsername, MQTTPass);
-//     delay(1000);
-//   }
-//   mqttClient.loop();
-// }
+void mqtt_loop()
+{
+  while(mqttClient.connected() == NULL){
+    Serial.println("connecting to mqtt...");
+    mqttClient.connect(MQTTClientID, MQTTUsername, MQTTPass);
+    delay(1000);
+  }
+  mqttClient.loop();
+}
 
-// void publish(float valueLeft, float valueRight, float valueForward)
-// {
-//   String data = "field1=" + String(valueLeft) + "&"; // left ultrasonic
-//   data += "field2=" + String(valueRight) + "&"; // right ultrasonic
-//   data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
+void publish(float valueLeft, float valueRight, float valueForward)
+{
+  String data = "field1=" + String(valueLeft) + "&"; // left ultrasonic
+  data += "field2=" + String(valueRight) + "&"; // right ultrasonic
+  data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
+  data += "field4=" + String(BT_on_off_status) + "&"; // on/off status
 
-//   String topicString = "channels/" + String(channelID) + "/publish";
-//   Serial.println(topicString);
-//   mqttClient.publish(topicString.c_str(), data.c_str());
-// }
+  String topicString = "channels/" + String(channelID) + "/publish";
+  Serial.println(topicString);
+  mqttClient.publish(topicString.c_str(), data.c_str());
+}
 
 void setup()
 {
@@ -204,8 +206,8 @@ void setup()
   SerialBT.begin("ItJustWorksBot");
   Serial.println("Bluetooth started...");
   
-  // wifi_mqtt_setup();  
-  // ThingSpeak.begin(wifiClient);
+  wifi_mqtt_setup();  
+  ThingSpeak.begin(wifiClient);
 }
 
 void decide_what_to_do(int result)
@@ -394,7 +396,7 @@ void main_loop()
   Serial.println(right_distance);
 
   // publish to thingspeak
-  // publish(left_distance, right_distance, center_distance);
+  publish(left_distance, right_distance, center_distance);
   
   // actuation
   int l = 1;
