@@ -14,9 +14,9 @@
 #define RIGHT   2
 #define LEFT    3
 
-// #include <WiFi.h>
-// #include <ThingSpeak.h>
-// #include <PubSubClient.h>
+#include <WiFi.h>
+#include <ThingSpeak.h>
+#include <PubSubClient.h>
 #include "BluetoothSerial.h"
 
 // #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
@@ -28,18 +28,18 @@ BluetoothSerial SerialBT;
 char t;
 int BT_on_off_status = 0;
 
-// #define ssid "hello.c"
-// #define password "pwla1953"
+#define ssid "Lorem ipsum"
+#define password "Getlostyoutrespassers"
 
-// const char *server = "mqtt3.thingspeak.com";
-// const char *MQTTUsername = "Hi81BiQeBgcQLS8LGTgRKTc";
-// const char *MQTTClientID = "Hi81BiQeBgcQLS8LGTgRKTc";
-// const char *MQTTPass = "QLTffZasuHLK+fZiB64op7dL";
+const char *server = "mqtt3.thingspeak.com";
+const char *MQTTUsername = "Hi81BiQeBgcQLS8LGTgRKTc";
+const char *MQTTClientID = "Hi81BiQeBgcQLS8LGTgRKTc";
+const char *MQTTPass = "QLTffZasuHLK+fZiB64op7dL";
 
-// int channelID = 2289111;
-// const char *WriteAPIKey = "4X3O813MKA5OQ8A2";
+int channelID = 2289111;
+const char *WriteAPIKey = "4X3O813MKA5OQ8A2";
 
-// int port  = 1883;
+int port  = 1883;
 
 /* robo functions */
 void set_speed(int leftSpeed, int rightSpeed);
@@ -51,9 +51,9 @@ void go_right(int turn_time);
 void go_straight();
 
 /* IOT functions */
-// void wifi_mqtt_setup();
-// void mqtt_loop();
-// void publish(float valueLeft, float valueRight, float valueForward);
+void wifi_mqtt_setup();
+void mqtt_loop();
+void publish(float valueLeft, float valueRight, float valueForward);
 
 int status = STOP;
 
@@ -66,8 +66,8 @@ const int maxSpeed = 1000;
 
 float danger = 30; // cms
 
-// WiFiClient wifiClient;
-// PubSubClient mqttClient(wifiClient);
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
 
 void set_speed(int leftSpeed, int rightSpeed)
 {
@@ -143,37 +143,37 @@ void go_straight()
   }
 }
 
-// void wifi_mqtt_setup()
-// {
-//   WiFi.begin(ssid, password);
-//   while(WiFi.status() != WL_CONNECTED){
-//     Serial.println("Connecting to wifi....");
-//     delay(1000);
-//   }
-//   Serial.println("Wifi connected!");
-//   mqttClient.setServer(server, port);
-// }
+void wifi_mqtt_setup()
+{
+  WiFi.begin(ssid, password);
+  while(WiFi.status() != WL_CONNECTED){
+    Serial.println("Connecting to wifi....");
+    delay(1000);
+  }
+  Serial.println("Wifi connected!");
+  mqttClient.setServer(server, port);
+}
 
-// void mqtt_loop()
-// {
-//   while(mqttClient.connected() == NULL){
-//     Serial.println("connecting to mqtt...");
-//     mqttClient.connect(MQTTClientID, MQTTUsername, MQTTPass);
-//     delay(1000);
-//   }
-//   mqttClient.loop();
-// }
+void mqtt_loop()
+{
+  while(mqttClient.connected() == NULL){
+    Serial.println("connecting to mqtt...");
+    mqttClient.connect(MQTTClientID, MQTTUsername, MQTTPass);
+    delay(1000);
+  }
+  mqttClient.loop();
+}
 
-// void publish(float valueLeft, float valueRight, float valueForward)
-// {
-//   String data = "field1=" + String(valueLeft) + "&"; // left ultrasonic
-//   data += "field2=" + String(valueRight) + "&"; // right ultrasonic
-//   data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
+void publish(float valueLeft, float valueRight, float valueForward)
+{
+  String data = "field1=" + String(valueLeft) + "&"; // left ultrasonic
+  data += "field2=" + String(valueRight) + "&"; // right ultrasonic
+  data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
 
-//   String topicString = "channels/" + String(channelID) + "/publish";
-//   Serial.println(topicString);
-//   mqttClient.publish(topicString.c_str(), data.c_str());
-// }
+  String topicString = "channels/" + String(channelID) + "/publish";
+  Serial.println(topicString);
+  mqttClient.publish(topicString.c_str(), data.c_str());
+}
 
 void setup()
 {
@@ -194,13 +194,13 @@ void setup()
   SerialBT.begin("ItJustWorksBot");
   Serial.println("Bluetooth started...");
   
-  // wifi_mqtt_setup();  
-  // ThingSpeak.begin(wifiClient);
+  wifi_mqtt_setup();  
+  ThingSpeak.begin(wifiClient);
 }
 
 void main_loop()
 {
-  // mqtt_loop();
+  mqtt_loop();
   float left_distance = take_reading(left_trigger, left_echo);
   float center_distance = take_reading(center_trigger, center_echo);
   float right_distance = take_reading(right_trigger, right_echo);
@@ -213,7 +213,7 @@ void main_loop()
   Serial.println(center_distance);
 
   // publish to thingspeak
-  // publish(left_distance, right_distance, center_distance);
+  publish(left_distance, right_distance, center_distance);
   
   // actuation
   int l = 1;
