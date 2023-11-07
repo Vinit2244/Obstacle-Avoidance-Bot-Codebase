@@ -7,11 +7,11 @@
 #define center_trigger              32
 #define center_echo                 33
 
-#define diagonal_right_trigger      320
-#define diagonal_right_echo         330
+#define right_diagonal_trigger      320
+#define right_diagonal_echo         330
 
-#define diagonal_left_trigger       321
-#define diagonal_left_echo          331
+#define left_diagonal_trigger       321
+#define left_diagonal_echo          331
 
 #define speed_of_sound 35000
 
@@ -192,13 +192,13 @@ void setup()
   pinMode(left_trigger, OUTPUT);
   pinMode(right_trigger, OUTPUT);
   pinMode(center_trigger, OUTPUT);
-  pinMode(diagonal_left_trigger, OUTPUT);
-  pinMode(diagonal_right_trigger, OUTPUT);
+  pinMode(left_diagonal_trigger, OUTPUT);
+  pinMode(right_diagonal_trigger, OUTPUT);
   pinMode(left_echo, INPUT);
   pinMode(right_echo, INPUT);
   pinMode(center_echo, INPUT);
-  pinMode(diagonal_right_echo, INPUT);
-  pinMode(diagonal_left_echo, INPUT);
+  pinMode(left_diagonal_echo, INPUT);
+  pinMode(right_diagonal_echo, INPUT);
 
   Serial.begin(115200);
   SerialBT.begin("ItJustWorksBot");
@@ -379,17 +379,17 @@ void main_loop()
   float left_distance = take_reading(left_trigger, left_echo);
   float center_distance = take_reading(center_trigger, center_echo);
   float right_distance = take_reading(right_trigger, right_echo);
-  float left_digonal_distance = take_reading(left_digonal_trigger, left_digonal_echo);
-  float right_digonal_distance = take_reading(right_digonal_trigger, right_digonal_echo);
+  float left_diagonal_distance = take_reading(left_diagonal_trigger, left_diagonal_echo);
+  float right_diagonal_distance = take_reading(right_diagonal_trigger, right_diagonal_echo);
 
   Serial.print("left distance: ");
   Serial.println(left_distance);
   Serial.print("left diagonal distance: ");
-  Serial.println(left_digonal_distance);
+  Serial.println(left_diagonal_distance);
   Serial.print("center distance: ");
   Serial.println(center_distance);
   Serial.print("right diagonal distance: ");
-  Serial.println(right_digonal_distance);
+  Serial.println(right_diagonal_distance);
   Serial.print("right distance: ");
   Serial.println(right_distance);
 
@@ -408,7 +408,7 @@ void main_loop()
     l = 0;
   }
 
-  if (left_digonal_distance < danger)
+  if (left_diagonal_distance < danger)
   {
     d_l = 0;
   }
@@ -418,7 +418,7 @@ void main_loop()
     c = 0;
   }
 
-  if (right_digonal_distance < danger)
+  if (right_diagonal_distance < danger)
   {
     d_r = 0;
   }
@@ -429,49 +429,7 @@ void main_loop()
   }
 
   int result = 16 * l + 8 * d_l + 4 * c + 2 * d_r + r;
-
-//   if (result == 0b000)
-//   {
-//     stop();
-//     status = STOP;
-//   }
-//   else if (result == 0b001)
-//   {
-//     go_right(HIGH_T);
-//     status = RIGHT;
-//   }
-//   else if (result == 0b010)
-//   {
-//     go_straight();
-//     status = FORWARD;
-//   }
-//   else if (result == 0b011)
-//   {
-//     go_right(LOW_T);
-//     status = RIGHT;
-//   }
-//   else if (result == 0b100)
-//   {
-//     go_left(HIGH_T);
-//     status = LEFT;
-//   }
-//   else if (result == 0b101)
-//   {
-//     go_right(100);
-//     status = RIGHT;
-//   }
-//   else if (result == 0b110)
-//   {
-//     go_left(LOW_T);
-//     status = LEFT;
-//   }
-//   else if (result == 0b111)
-//   {
-//     go_straight();
-//     status = FORWARD;
-//   }
-
-    decide_what_to_do(int result);
+  decide_what_to_do(result);
 
 }
 
