@@ -7,11 +7,11 @@
 #define center_trigger              32
 #define center_echo                 33
 
-#define right_diagonal_trigger      320
-#define right_diagonal_echo         330
+#define right_diagonal_trigger      35
+#define right_diagonal_echo         34
 
-#define left_diagonal_trigger       321
-#define left_diagonal_echo          331
+#define left_diagonal_trigger       2
+#define left_diagonal_echo          15
 
 #define speed_of_sound 35000
 
