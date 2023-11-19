@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BOT Control</title>
+    <style>
+        html {
+            font-family: Helvetica;
+            display: inline-block;
+            margin: 0px auto;
+            text-align: center;
+        }
+
+        body {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #444444;
+            margin: 50px auto 30px;
+        }
+
+        h3 {
+            color:
+                #444444;
+            margin-bottom: 50px;
+        }
+
+        .button {
+            display: block;
+            width: 80px;
+            background-color: #1abc9c;
+            border: none;
+            color:
+                white;
+            padding: 13px 30px;
+            text-decoration: none;
+            font-size: 25px;
+            margin: 0px auto 35px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .button-on {
+            background-color: #1abc9c;
+        }
+
+        .button-on:active {
+            background-color: #16a085;
+        }
+
+        .button-off {
+            background-color: #34495e;
+        }
+
+        .button-off:active {
+            background-color: #2c3e50;
+        }
+
+        p {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        #Left-reading {
+            background-color: #16a085;
+        }
+
+        #Right-reading {
+            background-color: #929292;
+        }
+
+        #Front-reading {
+            background-color: #16a085;
+        }
+
+        #outer-div {
+            width: 100%;
+            margin-left: 10%;
+            text-align: center;
+            display: inline-flex;
+        }
+        
+        .inner-div {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ESP32 with ThingSpeak Server</h1>
+    <div id="fieldData"></div>
+<h3>Plots</h3>
+<div id = "outer-div">
+    <div id="Left-reading" class = "inner-div">
+        <h4>Reading from Left Ultrasonic Sensor</h4>
+        <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2289111/charts/1?bgcolor=%23ffffff&color=%23d62020&days=1&dynamic=true&results=10&type=line&yaxismax=200&yaxismin=0&key=W36PLEHP1C71N9BK"></iframe>
+    </div>
+    <div id = "Right-reading" class = "inner-div">
+        <h4>Reading from Right Ultrasonic Sensor</h4>
+        <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2289111/charts/2?bgcolor=%23ffffff&color=%23d62020&days=1&dynamic=true&results=10&type=line&yaxismax=200&yaxismin=0&key=W36PLEHP1C71N9BK"></iframe>
+    </div>
+    <div id = "Front-reading" class = "inner-div">
+        <h4>Reading from Center Ultrasonic Sensor</h4>
+        <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2289111/charts/3?bgcolor=%23ffffff&color=%23d62020&days=1&dynamic=true&results=10&type=line&yaxismax=200&yaxismin=0&key=W36PLEHP1C71N9BK"></iframe>
+    </div>
+</div>
+
+</body>
+
+<script>
+    // Define your ThingSpeak API key and channel ID
+    const apiKey = 'W36PLEHP1C71N9BK';
+    const channelID = '2289111';
+
+    // Define the field you want to retrieve (replace 'fieldX' with the field number)
+    const fieldNumber = '4';
+
+    // Construct the ThingSpeak API URL
+    const apiUrl = `https://api.thingspeak.com/channels/${channelID}/fields/${fieldNumber}.json?api_key=${apiKey}`;
+
+    // Make an HTTP request to ThingSpeak
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const fieldData = data.feeds[data.feeds.length - 1][`field${fieldNumber}`];
+            document.getElementById('fieldData').textContent = `Field ${fieldNumber}: ${fieldData}`;
+        })
+        .catch(error => {
+            console.error('Error fetching data from ThingSpeak:', error);
+        });
+</script>
+
+</html>

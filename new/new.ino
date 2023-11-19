@@ -19,10 +19,6 @@
 #include <PubSubClient.h>
 #include "BluetoothSerial.h"
 
-// #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
-// #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
-// #endif
-
 BluetoothSerial SerialBT;
 
 char t;
@@ -169,6 +165,7 @@ void publish(float valueLeft, float valueRight, float valueForward)
   String data = "field1=" + String(valueLeft) + "&"; // left ultrasonic
   data += "field2=" + String(valueRight) + "&"; // right ultrasonic
   data += "field3=" + String(valueForward) + "&"; // forward ultrasonic
+  data += "field4=" + String(BT_on_off_status) + "&"; // forward ultrasonic
 
   String topicString = "channels/" + String(channelID) + "/publish";
   Serial.println(topicString);
