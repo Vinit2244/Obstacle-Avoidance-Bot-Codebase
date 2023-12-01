@@ -36,8 +36,8 @@ char mode = 'a';  // In auto mode by default
 #define Samyak_ssid     "Lorem ipsum"
 #define Samyak_password "Getlostyoutrespassers"
 
-#define ssid         Shinde_ssid
-#define password     Shinde_password
+#define ssid         Samyak_ssid
+#define password     Samyak_password
 #define server       "mqtt3.thingspeak.com"
 #define MQTTUsername "Hi81BiQeBgcQLS8LGTgRKTc"
 #define MQTTClientID "Hi81BiQeBgcQLS8LGTgRKTc"
@@ -48,7 +48,7 @@ char mode = 'a';  // In auto mode by default
 #define HIGH_T       150 // in miliseconds
 #define LOW_T        20 // in miliseconds
 #define maxSpeed     1000
-#define danger       30.0 // cms
+#define danger       18.69 // cms
 
 /* robo functions */
 void set_speed(int leftSpeed, int rightSpeed);
