@@ -18,3 +18,32 @@ This repository is for the team members of the ESW project team (It Just Works) 
 1. Adafruit MPU6050 (and all its depedencies) for the gyroscope
 2. Adafruit Unified Sensor
 3. Adafruit BusIO
+
+
+Link to website github: https://github.com/someyuck/ESW-Project-It-Just-Works-Webhost
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
