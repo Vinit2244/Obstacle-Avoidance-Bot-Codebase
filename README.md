@@ -1,49 +1,42 @@
 # ESW-Project-It-Just-Works
-This repository is for the team members of the ESW project team (It Just Works) for collaborating on the Sem3 ESW project of making an obstacle avoidance robot using artificial potential field method
 
-# Usage Instructions:
-0. On your Arduino IDE, click on "Tools" in the menu bar, and change the "Partition Scheme" to "No OTA (2MB APP/2MB SPIFFS)".
-1. Upload the code from esw/esw.ino onto the ESP32 module on the robot.
-2. Take out the USB from your PC, and connect it a 5V power outlet, like a power bank.
-3. Switch on your mobile hotspot (do remember to replace your ssid and password in the code)
-4. Switch on Bluetooth on your phone and pair with the ES32 (its name will appear as "ItJustWorksBot").
+Welcome to the ESW Project Team's repository for the "It Just Works" obstacle avoidance robot. This repository is dedicated to collaboration among team members working on the Sem3 ESW project, focusing on implementing an obstacle avoidance robot using the artificial potential field method.
+
+## Contributors:
+
+- Vinit Mehta
+- Samyak Mishra
+- Abhinav Raundhal
+- Yash Shinde
+
+**Note: Developed during the 3rd semester for the course "Embedded System Workshop."**
+
+## Usage Instructions:
+
+Follow these steps to deploy and operate the obstacle avoidance robot:
+
+0. In your Arduino IDE, navigate to "Tools" in the menu bar, and set the "Partition Scheme" to "No OTA (2MB APP/2MB SPIFFS)."
+1. Upload the code from `esw/esw.ino` onto the ESP32 module installed on the robot.
+2. Disconnect the USB cable from your PC, and power the robot using a 5V power source, such as a power bank.
+3. Activate your mobile hotspot (ensure to update your SSID and password in the code).
+4. Turn on Bluetooth on your phone and pair it with the ESP32; the device name will be displayed as "ItJustWorksBot."
 5. Launch the "Serial Bluetooth Monitor" app on your phone.
-6. Under "Devices", connect with the ESP32.
-7. Send a '1' (without quotes) via the app to start the robot.
-8. Watch as it moves around, avoiding obstacles.
-9. You can see real-time data being uploaded onto our website.
-10. To switch it off, send a '0' (without quotes).
+6. In the app, under "Devices," connect to the ESP32.
+7. Send a '1' (without quotes) via the app to initiate the robot's movement.
+8. Observe as the robot navigates, avoiding obstacles in its path.
+9. Real-time data is continuously uploaded to our website.
+10. To power off the robot, send a '0' (without quotes).
 
-# Required Libraries
-1. Adafruit MPU6050 (and all its depedencies) for the gyroscope
-2. Adafruit Unified Sensor
-3. Adafruit BusIO
+## Required Libraries:
 
+Make sure to install the following Arduino libraries before uploading the code:
 
-Link to website github: https://github.com/someyuck/ESW-Project-It-Just-Works-Webhost
+1. **Adafruit MPU6050:** Required for gyroscope functionality.
+2. **Adafruit Unified Sensor:** Essential for sensor integration.
+3. **Adafruit BusIO:** Necessary for I2C communication.
 
+## Website Repository:
 
+For the web hosting part of the project, check out our website's GitHub repository [here](https://github.com/someyuck/ESW-Project-It-Just-Works-Webhost).
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Feel free to contribute, report issues, or provide feedback. Happy coding!
